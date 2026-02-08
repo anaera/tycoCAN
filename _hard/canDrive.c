@@ -94,9 +94,9 @@ uint8_t updByteCRC(uint8_t crc, uint8_t byte)
 	return crc;
 }
 
-void initCAN(uint8_t speedUART)
+void initCAN()
 {
-	initUART(speedUART);
+	initUART(_ee._can_speed);
 	//загрузка констант uCanDrive
 	constant.rcvMask = _ee._bit_mask; //маска бита выборки данных у нас она 0x10
 	constant.crcMask = _ee._crc_poly; //полином CRC
