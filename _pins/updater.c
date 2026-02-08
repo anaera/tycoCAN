@@ -103,7 +103,7 @@ void updatePins(void)
 			if ((val ^ ctl_pin[num].val) != 0) { // изменилось состояние
 				statePin.state = val ? _UP : _DN;
 				statePin.number = num;
-				checkPress(statePin);
+				if (ctl_pin[num].dir)  checkPress(statePin); //длина нажатия для inp
 				ctl_pin[num].val = val;
 			}
 		}
