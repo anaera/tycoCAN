@@ -138,8 +138,8 @@ void dispatchTimer(void)
 
 			if (qpr[i].tmQueue == 0) { // Закончилось
 				statePin.total = qpr[i].stQueue.total;
-				writePin(statePin); // установливаем новое состояние
-				storeActivPin(qpr[i].stQueue.total); // Отправляем 
+				writePin(statePin); // установливаем новое состояние и !!отправляем
+//				storeActivPin(qpr[i].stQueue.total); // Отправляем 
 				moveTrailTimer(i); //придвигаем границу к ближайшему занятому
 			}
 		}
