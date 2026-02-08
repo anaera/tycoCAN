@@ -19,7 +19,7 @@
 
 uint8_t updByteCRC(uint8_t crc, uint8_t byte);
 uint8_t updBitCRC(uint8_t crc, uint8_t bit);
-void initCAN(uint8_t num);
+void initCAN(void);
 void loadConstEngine(void);
 void initNewCycle(void);
 inline void setStateSend(void);
