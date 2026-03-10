@@ -17,9 +17,9 @@
 //константы pinEngine
 
 #define TIME_BOUNCE 5
-#define TIME_QUICK 60
-#define TIME_LONG 70
-#define TIME_REPIT 120
+#define TIME_QUICK 80
+#define TIME_LONG 80
+#define TIME_REPIT 160
 #define TIME_TIMERS_WAIT 10
 
 typedef union {

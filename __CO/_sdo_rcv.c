@@ -11,8 +11,14 @@
 #include "../_can/CAN.h"
 #include "../__CO/srvCTL.h"
 
+uint8_t DATAEE_ReadByte(uint8_t epp_adr);
+void DATAEE_WriteByte(uint8_t epp_adr, uint8_t epp_data);
+extern void(* const funcLight[8])(uint8_t);
 void srv_callBack(uint16_t *oldVal, uint16_t newVal);
 void srvSetFlag(uint8_t mask);
+
+extern epp_sdo_t epp_sdo;
+
 // === SDO-сервер
 extern uint8_t od_count;
 extern const od_entry_t od[];
@@ -20,11 +26,21 @@ extern packCAN_t rxCAN;
 extern packCAN_t txCAN;
 extern packSDO_t packSDO;
 
+void initSendSDO(void)
+{
+	uint8_t cnt = 8;
+	while (cnt) {
+		cnt--;
+		packSDO.raw[cnt] = rxCAN.data[cnt];
+	}
+}
+
 void execSDO(void)
 {
-	subind_t *ptr_subind;
+	const subind_t *ptr_subind;
 	//будем формировать обрабатывать приняятый запрос и формировать ответ
 	// === Найти объект и субиндекс
+	initSendSDO();
 	srvSetFlag(SYS_ANS_SDO); //установить флаг
 	packSDO.cmd_spec = 0;
 	packSDO.reqeue_type = ERR_RESP;
@@ -74,6 +90,19 @@ index_OK:
 				packSDO.len_value = 4;
 				break;
 			}
+			case EPP_RW16:
+			{
+				//if (rxCAN.packSDO.len_value == 2) {
+				//if (rxCAN.packSDO.val08t[1] == epp_sdo.address) { //addr - hi
+				epp_sdo.value = DATAEE_ReadByte(epp_sdo.address); // читаем данные
+				//*(uint8_t*) ptr_subind->value = 
+				packSDO.val16t[0] = epp_sdo.adr_val;
+				packSDO.len_value = 2;
+				//return;
+				//	}
+				//}
+				break;
+			}
 			default:
 			{
 				packSDO.error_code = ERR_UNKNOW_TYPE;
@@ -118,12 +147,32 @@ index_OK:
 
 		case INTEGER32:
 		{
-			if (rxCAN.packSDO.len_value == 3) {
+			if (rxCAN.packSDO.len_value == 4) {
 				*(uint32_t*) ptr_subind->value = rxCAN.packSDO.val32t[0];
 				return;
 			}
 			break;
 		}
+		case EPP_RW16:
+		{
+			if (rxCAN.packSDO.len_value == 2) {
+				if (rxCAN.packSDO.val08t[1] == epp_sdo.address) { //addr - hi
+					//*(uint16_t*) ptr_subind->value = rxCAN.packSDO.val08t[0]; //val -lo
+					DATAEE_WriteByte(rxCAN.packSDO.val08t[1], rxCAN.packSDO.val08t[0]);
+					return;
+				}
+			}
+			break;
+		}
+		case FUN_EXEC:
+		{
+			if (rxCAN.packSDO.len_value == 2) {
+				funcLight[ rxCAN.packSDO.val08t[1]](rxCAN.packSDO.val08t[0]); //fun-hi, pin-lo
+				return;
+			}
+			break;
+		}
+
 		default:
 		{
 			packSDO.error_code = ERR_UNKNOW_TYPE;

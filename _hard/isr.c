@@ -53,6 +53,11 @@ void __interrupt() fullINT(void)
 		tmr.sysFlag = 1;
 		return;
 	}
+		if (PIR3bits.TMR6IF && PIE3bits.TMR6IE) { //1мс
+		PIR3bits.TMR6IF = 0;
+		NOP();
+		return;
+	}
 	if (PIR1bits.TMR2IF && PIE1bits.TMR2IE) { //10мс
 		PIR1bits.TMR2IF = 0;
 		NOP();

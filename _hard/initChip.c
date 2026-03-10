@@ -31,10 +31,10 @@ void initCPU(void)
 void initPORTA(void)
 {
 	//init_PORTA
+
+	PORTA = 0x00;
+	LATA = 0x00;
 	ANSELA = 0x00; // all analog to digital I/O    
-	TRISA = 0x00; //all pins out
-	PORTA = 0xFF;
-	LATA = 0xFF; //all pins set 1
 	TRISA = 0x3F; //all pins input
 	INTCON = 0x00; //сброс флага INTF
 
@@ -43,10 +43,9 @@ void initPORTA(void)
 void initPORTC(void)
 {
 	//init_PORTC
+	PORTC = 0x00;
+	LATC = 0x00;
 	ANSELC = 0x00; // all analog to digital I/O 
-	TRISC = 0x00; //all pins out
-	PORTC = 0xFF;
-	LATC = 0xFF; //all pins set 1
 	TRISC = 0x3F; //all pins input
 }
 //---------------------------------------------------------------------
@@ -58,17 +57,17 @@ void initECCP2(void)
 	// RC3 выставляем на выход
 	TRISCbits.TRISC3 = 0;
 	// PM single; DCB 0x0; CCPM P2A: active high; P2B: active high; 
-	CCP2CON = 0xC;
+	CCP2CON = 0x0C;
 	// CTSEL PWM2timer6; 
-	CCPTMRS0 = 0x8;
+	CCPTMRS0 = 0x08;
 	// CCPASE operating; CCPAS disabled; PSSAC low; PSSBD low; 
 	CCP2AS = 0x0;
 	// PRSEN manual_restart; PDC 0x0; 
 	PWM2CON = 0x0;
 	// STRSYNC start_at_begin; STRB P2B_to_port; STRA P2A_to_CCP2M; 
-	PSTR2CON = 0x1;
+	PSTR2CON = 0x01;
 	// CCPRL 255; 
-	CCPR2L = 0x00;
+	CCPR2L = 125;
 	// CCPRH 0x0; 
 	CCPR2H = 0x0;
 }

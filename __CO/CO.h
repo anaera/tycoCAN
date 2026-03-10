@@ -77,7 +77,6 @@ typedef union {
 
         union {
             uint16_t index_sdo;
-            uint16_t error_code;
         };
         uint8_t subindex_sdo;
 
@@ -85,6 +84,7 @@ typedef union {
             uint8_t val08t[4];
             uint16_t val16t[2];
             uint32_t val32t[1];
+            uint32_t error_code;
         };
     };
 } packSDO_t;

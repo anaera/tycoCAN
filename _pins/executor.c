@@ -13,7 +13,6 @@
 #define LIGHT_PIN 4
 #define MANUAL_PIN 5
 
-
 enum {
 	_dnSetPinVal = 0,
 	_upSetPinVal,
@@ -155,15 +154,24 @@ void storeActivExec(uint8_t stateExec)
 		packExec.length++;
 	}
 }
-
+void(* const funcLight[8])(uint8_t) = {dnSetPinVal, upSetPinVal, swSetPinVal, upSetPinTimer, quickPress, longPress, upStartLight, pickUP};
+/*
+void execRemote(uint8_t stateExec)
+{
+	tab_element_t tab;
+	tab.element = stateExec;
+	uint8_t numPin = tab.entry.actPinNum;
+	uint8_t cmdAct = tab.entry.action;
+	funcLight[cmdAct](numPin);
+}
+*/
 void execCMD(uint8_t stateExec)
 {
 	tab_element_t tab;
 	tab.element = stateExec;
 	uint8_t numPin = tab.entry.actPinNum;
 	uint8_t cmdAct = tab.entry.action;
-
-	switch (cmdAct) {
+		switch (cmdAct) {
 	case _dnSetPinVal:
 		dnSetPinVal(numPin);
 		break;
@@ -207,7 +215,7 @@ uint8_t getElement(tab_element_t __eeprom *ptrEErom)
 {
 	//return _ee.table[(*ptr)++].element;
 	//return(*ptrEErom).element;
-		return ptrEErom->element;
+	return ptrEErom->element;
 }
 
 void scanTablePDO(uint8_t node, uint8_t activePin)

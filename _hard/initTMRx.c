@@ -38,14 +38,14 @@ void initTMR0(void)
 	//init_TMR0
 	// PSA assigned; PS 1:16; TMRSE Increment_hi_lo; mask the nWPUEN and INTEDG bits
 	// nWPUEN = 1 INTEDG = 0 TMRCS = 0 TMRSE = x  PSA = 0x03
-	OPTION_REG = (uint8_t) ((OPTION_REG & 0x83)|(0x80|0x03));
+	OPTION_REG = (uint8_t) ((OPTION_REG & 0x83) | (0x80 | 0x03));
 	TMR0 = _TMR0; // 0xCE дополнение к 49 до 255
-	
+
 	//OSC = 16 000 000; тактирование Fosc/4 = 16000000/4 = 4 000 000
 	//Прескалер 1:4, (Fosc/4 ) / 4 = 4 000 000/16 = 250 000
 	//FF-CE = 31(49dec)один тик 250 000 гц -> 4 мкс *49 = 196 (200)мкс (us)
 	//FF-90 = 6F (111) один тик 250 000 гц -> 4 мкс 111 = 444 (500)мкс (us)
-	
+
 
 }
 //------------------------------------------------------------------------------
@@ -55,9 +55,9 @@ void initTMR1(void)
 	//init_TMR1
 	//T1GSS T1G_pin; TMR1GE disabled; T1GTM disabled; T1GPOL low; T1GGO done; T1GSPM disabled; 
 	T1GCON = 0x00;
-	CCP1CON = 0x00;
+//	CCP1CON = 0x00;
 	////!!!!!!!!!!!!!!!!!!!!!!!!!! pic16F1824 разремить !!
-	CCP2CON = 0x00;
+//	CCP2CON = 0x00;
 	TMR1H = _TMR1H; //0xF8 см.ISR();
 	TMR1L = _TMR1L; //0x30 см.ISR();
 	// T1CKPS 1:8; T1OSCEN disabled; nT1SYNC synchronize; TMR1CS FOSC/4; TMR1ON disabled; 
@@ -93,13 +93,14 @@ void initTMR4(void)
 //предделитель 16-> 0000 00(10)
 #define T6CKPS  0x02 // 0000 0010
 
-void initTMR6(void) {
-    // TOUTPS 1:1; TMRON on; TCKPS 1:16; 
- 	T6CON = T6OUTPS | T6CKPS;
-    // PR 200 
-    PR6 = 0xFA;
-    // TMR 0x0; 
-    TMR6 = 0x0;
+void initTMR6(void)
+{
+	// TOUTPS 1:1; TMRON on; TCKPS 1:16; 
+	T6CON = T6OUTPS | T6CKPS;
+	// PR 200 
+	PR6 = 0xFA;
+	// TMR 0x0; 
+	TMR6 = 0x0;
 }
 //------------------------------------------------------------------------------
 
@@ -128,6 +129,8 @@ void startTMRx(void)
 	PIE3bits.TMR4IE = 1;
 	//Очищаем прерывание от Таймера 6
 	PIR3bits.TMR6IF = 0;
+	PIE3bits.TMR6IE = 1;
+
 
 	TMR1ON = 1;
 	TMR2ON = 1;
