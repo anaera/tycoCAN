@@ -10,18 +10,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include "../__CO/srvCTL.h"
-
-#define TEMP_MAX 4
-
-typedef struct {
-	uint8_t msbTemp;
-	uint8_t lsbTemp;
-} msbLsb_t;
-
-typedef union {
-	msbLsb_t setTemp[TEMP_MAX];
-	uint8_t packTemp[TEMP_MAX + TEMP_MAX];
-} temp_t;
+#include "../_lm75/lm75.h"
 
 void(* i2cStepExec)(void);
 void i2cFinishExit(void);
@@ -43,7 +32,7 @@ uint8_t getTempByte(uint8_t cnt);
 volatile uint8_t cntTemp; //счетчик датчиков
 uint8_t adrLM75[TEMP_MAX] = {0x48, 0x49, 0x4A, 0x4B}; //адреса датчиков
 
-volatile temp_t tempVal; //пакет температуры для отсылки
+extern temp_t tempVal; //пакет температуры для отсылки
 extern srv_t srv;
 //------------------------------------------------------------------------------
 //инициализация i2c 
