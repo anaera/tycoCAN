@@ -163,3 +163,18 @@ skip_tris:
     return
     bcf INDF1,7
     return
+    //num_pos proc
+    global _num_pos
+_num_pos:
+    nop
+    andlw 0x07
+    BRW
+    retlw 1
+    retlw 2
+    retlw 4
+    retlw 8
+    retlw 16
+    retlw 32
+    retlw 64
+    retlw 128
+    return
