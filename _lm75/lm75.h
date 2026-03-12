@@ -14,7 +14,7 @@ typedef struct {
 typedef union {
     msbLsb_t setTemp[TEMP_MAX]; // LM75 выдает temp Старшим байтом вперед
     uint8_t packTemp[2*TEMP_MAX]; // меняем на младшим впкркд для int16
-    uint16_t temp16t[TEMP_MAX];
+    int16_t temp16t[TEMP_MAX];
 } temp_t;
 
 #endif	/* LM75_H */
