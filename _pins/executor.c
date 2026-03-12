@@ -154,7 +154,7 @@ void storeActivExec(uint8_t stateExec)
 		packExec.length++;
 	}
 }
-void(* const funcLight[8])(uint8_t) = {dnSetPinVal, upSetPinVal, swSetPinVal, upSetPinTimer, quickPress, longPress, upStartLight, pickUP};
+//void(* const funcLight[8])(uint8_t) = {dnSetPinVal, upSetPinVal, swSetPinVal, upSetPinTimer, quickPress, longPress//, upStartLight, pickUP};
 /*
 void execRemote(uint8_t stateExec)
 {
