@@ -15,7 +15,7 @@
 
 extern __eeprom ee_t _ee;
 extern uint8_t node_owner, node_error;
-
+extern uint8_t by_event, by_request, by_timer;
 extern uint8_t state_node, state_prev, state_send;
 
 //static errorStruct_t errorCount;
@@ -42,6 +42,9 @@ void initSrvCore(void)
 void initCoreCan(void)
 {
 	node_owner = _ee._node;
+	by_event = _ee.ctl_chk[0];
+	by_timer = _ee.ctl_chk[1];
+	by_request = _ee.ctl_chk[2];
 	node_error = 0;
 	state_node = 0;
 	state_prev = 0;
