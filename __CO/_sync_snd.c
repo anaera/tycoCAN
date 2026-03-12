@@ -20,26 +20,30 @@ uint8_t readPin(uint8_t numPin);
 bool srvChkFlag(uint8_t mask);
 uint8_t getControlPin(uint8_t num);
 
-
+extern uint8_t by_event, by_request, by_timer;
 extern packCAN_t txCAN; ///<буфер передачи
 
-uint8_t makePack(uint8_t mask)
+uint8_t makePack(uint8_t mask_sync)
 {
 	state_pin_t statePin;
+	uint8_t mask_pin;
+	mask_pin = 1;
 	statePin.total = 0;
 	txCAN.cmd_can = PDO0;
 	txCAN.lenData = 0;
 	for (uint8_t cnt = 0; cnt < MAX_PINS; cnt++) {
-		if (getControlPin(cnt) & mask) { //должен ли бит отслеживаться 
+		if (mask_sync & mask_pin) { //должен ли бит отслеживаться 
 			statePin.set.val = readPin(cnt);
 			statePin.number = cnt;
 			txCAN.data[txCAN.lenData] = statePin.total; //readPin(uint8_t cnt);
 			txCAN.lenData++;
 		}
+		mask_pin =(uint8_t) (mask_pin << 1);
 	}
 	return txCAN.lenData;
 }
 
+/*
 bool checkSYNC(void)
 {
 	if (srvChkFlag(TMR_SYNC_PDO)) {
@@ -52,5 +56,15 @@ bool checkSYNC(void)
 		if (makePack(MSK_REQU)) return true; // по NODE SYNC
 	}
 	return false;
-}
+}*/
 
+bool checkSYNC(void)
+{
+	if (srvChkFlag(TMR_SYNC_PDO)) {
+		if (makePack(by_timer)) return true; //timer SYNC
+	}
+	if (srvChkFlag(SYS_MASTER_SYNC)) {
+		if (makePack(by_request)) return true; //request SYNC 
+	}
+	return false;
+}
