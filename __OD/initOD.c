@@ -42,9 +42,9 @@ void initSrvCore(void)
 void initCoreCan(void)
 {
 	node_owner = _ee._node;
-	by_event = _ee.ctl_chk[0];
-	by_timer = _ee.ctl_chk[1];
-	by_request = _ee.ctl_chk[2];
+	by_event = _ee.ctl_chk[0].check;
+	by_timer = _ee.ctl_chk[1].check;
+	by_request = _ee.ctl_chk[2].check;
 	node_error = 0;
 	state_node = 0;
 	state_prev = 0;
