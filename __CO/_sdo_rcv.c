@@ -13,7 +13,7 @@
 
 uint8_t DATAEE_ReadByte(uint8_t epp_adr);
 void DATAEE_WriteByte(uint8_t epp_adr, uint8_t epp_data);
-extern void(* const funcLight[8])(uint8_t);
+//extern void(* const funcLight[8])(uint8_t);
 void srv_callBack(uint16_t *oldVal, uint16_t newVal);
 void srvSetFlag(uint8_t mask);
 
@@ -25,6 +25,8 @@ extern const od_entry_t od[];
 extern packCAN_t rxCAN;
 extern packCAN_t txCAN;
 extern packSDO_t packSDO;
+
+void execCMD(uint8_t stateExec);
 
 void initSendSDO(void)
 {
@@ -167,7 +169,10 @@ index_OK:
 		case FUN_EXEC:
 		{
 			if (rxCAN.packSDO.len_value == 2) {
-				funcLight[ rxCAN.packSDO.val08t[1]](rxCAN.packSDO.val08t[0]); //fun-hi, pin-lo
+				uint8_t stateExec;
+				stateExec = (uint8_t) ((rxCAN.packSDO.val08t[1] & 0x07) << 3);
+				stateExec = stateExec | (rxCAN.packSDO.val08t[0] & 0x07);
+				execCMD(stateExec);
 				return;
 			}
 			break;
