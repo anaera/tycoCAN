@@ -39,34 +39,44 @@ service_t srvPINS = {
 	.waitTime = 0,
 	.handle = 0
 };
+//Требуется Маска устанавливается в прерыывании LM75
 //работа с флагами сервисов в основном цикле (атомарность не требуется)
+
 bool srvChkFlag(uint8_t bitMask)
 {
 	uint8_t mask = (uint8_t) (1 << (bitMask & 0x07));
 	uint8_t num = bitMask >> 3;
-
+	di();
 	if (srv.byteFlag[num] & mask) {
 		srv.byteFlag[num] &= (~mask);
+		ei();
 		return true;
 	}
+	ei();
 	return false;
 }
 
 void srvSetFlag(uint8_t bitMask)
 {
-		uint8_t mask = (uint8_t) (1 << (bitMask & 0x07));
+	uint8_t mask = (uint8_t) (1 << (bitMask & 0x07));
 	uint8_t num = bitMask >> 3;
+	di();
 	srv.byteFlag[num] |= mask;
-	}
-	
-	bool srvGetFlag(uint8_t bitMask)
+	ei();
+}
+
+bool srvGetFlag(uint8_t bitMask)
 {
 	uint8_t mask = (uint8_t) (1 << (bitMask & 0x07));
 	uint8_t num = bitMask >> 3;
-	return srv.byteFlag[num] &= mask;
+	di();
+	uint8_t tmp = srv.byteFlag[num] &= mask;
+	ei();
+	return tmp;
 }
-	
-	//----HBT
+
+//----HBT
+
 void initHBT(void)
 {
 	srvHBT.mask = TMR_HRBT;
@@ -74,16 +84,19 @@ void initHBT(void)
 	initTimerEntry(&srvHBT); //регистрация таймера
 
 };
+
 void updHBT(uint16_t newTime)
 {
 	srvHBT.waitTime = newTime;
 	updTimerHandle(srvHBT.handle);
 }
+
 uint16_t getTimeHBT(void)
 {
 	return srvHBT.waitTime;
 }
 //----TEMP
+
 void initTEMP(void)
 {
 	srvTEMP.mask = TMR_TEMP;
@@ -91,6 +104,7 @@ void initTEMP(void)
 	initTimerEntry(&srvTEMP); //регистрация таймера
 
 };
+
 void updTEMP(uint16_t newTime)
 {
 	srvTEMP.waitTime = newTime;
@@ -102,6 +116,7 @@ uint16_t getTimeTEMP(void)
 	return srvTEMP.waitTime;
 }
 // ----SYNC
+
 void initSYNC(void)
 {
 	srvSYNC.mask = TMR_SYNC_PDO;
@@ -114,11 +129,13 @@ void updSYNC(uint16_t newTime)
 	srvSYNC.waitTime = newTime;
 	updTimerHandle(srvSYNC.handle);
 }
+
 uint16_t getTimeSYNC(void)
 {
 	return srvSYNC.waitTime;
 }
 // ----PINS
+
 void initPINS(void)
 {
 	srvPINS.mask = TMR_PINS;
@@ -131,6 +148,7 @@ void updPINS(uint16_t newTime)
 	srvPINS.waitTime = newTime;
 	updTimerHandle(srvPINS.handle);
 }
+
 uint16_t getTimePINS(void)
 {
 	return srvPINS.waitTime;
