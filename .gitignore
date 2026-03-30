@@ -40,6 +40,8 @@
 *.app
 
 # Build directories
+nbproject/
+dist/
 build/
 Build/
 build-*/
