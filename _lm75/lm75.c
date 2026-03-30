@@ -84,6 +84,7 @@ void i2cExitStep(void)
 		cntTemp = 0; //конец списка датчиков IDLE
 		i2cStepExec = i2cIdleStep;
 		srv.sysTMP_PDO = true; //флаг конца выбоки температуры из датчиков
+		srv.sysTERMO = true; // запуск термостатов
 	}
 }
 
