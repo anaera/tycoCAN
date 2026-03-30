@@ -77,7 +77,7 @@ void main(void)
 	while (1) {
 		canReceive();
 		stateEngine();
-		if (app_flag()) {
+		if (app_flag()) { // опрос процессов которые не чаще 0,1сек
 			checkTimers(); // Проверяет софт-таймеры - 0.1cek
 			if (srvChkFlag(TMR_TEMP)) {
 				 startLM75();
@@ -86,7 +86,7 @@ void main(void)
 				dispatchTimer();
 			}
 		}
-		if (cyc_flag()) {
+		if (cyc_flag()) { // опрос процессов которые не чаще 0,01сек
 			scanPackExec();			
 			updatePins();
 			dispatchPress();
