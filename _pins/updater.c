@@ -52,14 +52,19 @@ void initPins(void)
 		}
 	}
 }
+extern uint8_t by_event;
+uint8_t num_pos(uint8_t num);
 
 void storeActivPin(uint8_t statePinVal)
 {
-	scanTablePDO(CAN_NODE, statePinVal);
-	if (state_node != NMT_STATE_OPER) return;
-	if (packPDO.length < MAX_PINS) {
-		packPDO.raw[packPDO.length] = statePinVal;
-		packPDO.length++;
+	//	uint8_t mask;
+	scanTablePDO(CAN_NODE, statePinVal); //отсылаем пин на локальную отработку по таблице
+	if (state_node != NMT_STATE_OPER) return; // состояние не OPERATED
+	if (packPDO.length < MAX_PINS) { // место в буфере есть
+		if (by_event & num_pos(statePinVal & 0x07)) { // обновление пина (by_event)
+			packPDO.raw[packPDO.length] = statePinVal;  // отсылаем
+			packPDO.length++; //сдедующий
+		}
 	}
 }
 
@@ -103,7 +108,7 @@ void updatePins(void)
 			if ((val ^ ctl_pin[num].val) != 0) { // изменилось состояние
 				statePin.state = val ? _UP : _DN;
 				statePin.number = num;
-				if (ctl_pin[num].dir)  checkPress(statePin); //длина нажатия для inp
+				if (ctl_pin[num].dir) checkPress(statePin); //длина нажатия для inp
 				ctl_pin[num].val = val;
 			}
 		}
