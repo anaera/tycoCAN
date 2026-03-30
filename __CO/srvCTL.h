@@ -23,7 +23,7 @@
 
 // флаги сервисов canOPEN
 #define SYS_MASTER_SYNC 8
-#define SYS_NODE_SYNC 9
+#define SYS_TERMOSTAT 9
 #define SYS_ANS_SDO  10
 #define SYS_TEMP_PDO 11
 
@@ -49,7 +49,7 @@ typedef union {
 
 		struct {
 			uint8_t sysM_SYNC  : 1; //8
-			uint8_t sysN_SYNC  : 1; //9
+			uint8_t sysTERMO  : 1; //9
 			uint8_t sysANS_SDO : 1; //10
 			uint8_t sysTMP_PDO : 1; //11
 			uint8_t sys0012 : 1; //12
