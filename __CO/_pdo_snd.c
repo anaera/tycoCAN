@@ -21,7 +21,7 @@ extern packPDO_t packPDO;
 extern ctl_pin_t ctl_pin[8];
 extern __eeprom ee_t _ee;
 
-void addPinPDO0(uint8_t addPin)
+/*void addPinPDO0(uint8_t addPin)
 {
 	state_pin_t statePin;
 	statePin.total = addPin;
@@ -44,15 +44,17 @@ void addPinPDO0(uint8_t addPin)
 	}
 	txCAN.data[txCAN.lenData] = statePin.total;
 	txCAN.lenData++;
-}
+}*/
 
 bool makePDO0(void)
 {
 	for (uint8_t cnt = 0; cnt < packPDO.length; cnt++) {
-		addPinPDO0(packPDO.raw[cnt]);
-		packPDO.raw[cnt] = 0;
+		//addPinPDO0(packPDO.raw[cnt]);
+		txCAN.data[txCAN.lenData] = packPDO.raw[cnt]; // из буфера
+		packPDO.raw[cnt] = 0; //это лишнее??	
+		txCAN.lenData++; // следующий
 	}
-	packPDO.length = 0;
+	packPDO.length = 0; //буфер чист
 	if (txCAN.lenData == 0)return false;
 	txCAN.cmd_can = PDO0; // Установили команду
 	return true;
@@ -61,14 +63,15 @@ bool makePDO0(void)
 bool makePDO1(void)
 {
 	if (srvChkFlag(SYS_TEMP_PDO)) {
-		txCAN.lenData = 0;
-		txCAN.cmd_can = PDO1; // Установили команду
+		//		txCAN.lenData = 0; // лишнее
+
 		while (txCAN.lenData < 8) { //LEN_DATA
 			txCAN.data[txCAN.lenData] = getTempByte(txCAN.lenData);
 			txCAN.lenData++;
 			txCAN.data[txCAN.lenData] = getTempByte(txCAN.lenData);
 			txCAN.lenData++;
 		}
+		txCAN.cmd_can = PDO1; // Установили команду
 		return true;
 	}
 	return false;
