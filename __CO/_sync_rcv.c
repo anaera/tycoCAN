@@ -17,7 +17,7 @@ void setSync(void)
 {
 	if (rxCAN.lenData == 1) {
 		if (rxCAN.data[0] == node_owner) {
-			srvSetFlag(SYS_NODE_SYNC);
+			srvSetFlag(SYS_MASTER_SYNC);
 		}
 		if (rxCAN.data[0] == 0) {
 			srvSetFlag(SYS_MASTER_SYNC);
